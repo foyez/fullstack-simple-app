@@ -2,6 +2,7 @@
 import 'reflect-metadata'
 import { ConnectionOptions, createConnection } from 'typeorm'
 import express from 'express'
+import cors from 'cors'
 import { ApolloServer } from 'apollo-server-express'
 import { buildSchema } from 'type-graphql'
 
@@ -30,6 +31,8 @@ const main = async () => {
   // Server setup
   const app = express()
 
+  app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
+
   // Test api
   app.get('/test', (_req, res) => res.send('Hello World'))
 
@@ -42,7 +45,7 @@ const main = async () => {
     context: () => ({}), // context - special object, accessible by all resolvers
   })
 
-  apolloServer.applyMiddleware({ app })
+  apolloServer.applyMiddleware({ app, cors: false })
 
   app.listen(4000, () => console.log('server listen on port 4000'))
 }

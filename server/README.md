@@ -15,7 +15,8 @@ yarn init
 ```bash
 npx tsconfig.json
 npx gitignore node
-yarn add -D typescript @types/node nodemon
+yarn add -D typescript @types/node
+yarn add -D nodemon concurrently
 ```
 
 ### Create `src` directory & create `index.ts` file
@@ -41,17 +42,17 @@ console.log('Hello World')
 {
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon dist/index.js",
+    "dev:nodemon": "nodemon dist/index.js",
+    "dev": "concurrently \"yarn watch\" \"yarn dev:nodemon\"",
     "start": "node dist/index.js"
   }
 }
 ```
 
-### Run `yarn watch` & `yarn start` in two terminals
+### Run `yarn dev`
 
 ```bash
-yarn watch
-yarn start
+yarn dev
 ```
 
 Here is the results:

@@ -97,7 +97,7 @@ yarn add -D @graphql-codegen/cli
 7. How to name the config file? `codegen.yml`
 8. What script in package.json should run the codegen? `gen`
 
-- After answering these questions a `codegen.yml` file will be created:
+- After answering these questions a `codegen.yml` file will be generated:
 
 `codegen.yml`
 
@@ -130,7 +130,7 @@ query Posts {
 }
 ```
 
-### Run codegen script (The graphql server have to stay running)
+### Run codegen script (The graphql server have to be stay running)
 
 ```bash
 yarn gen
@@ -147,6 +147,61 @@ export default function Home() {
   return (
     <div>
       <h1>Next js & Graphql App</h1>
+      {data?.posts.map((post) => (
+        <div key={post.id}>
+          <h3>{post.title}</h3>
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+### Add `createPost` mutation
+
+`src/graphql/mutations/createPost.graphql`
+
+```graphql
+mutation CreatePost($title: String!) {
+  createPost(title: $title) {
+    id
+    title
+    createdAt
+    updatedAt
+  }
+}
+```
+
+run: `yarn gen`
+
+`src/pages/index.tsx`
+
+```tsx
+export default function Home() {
+  const { data } = usePostsQuery()
+  const [createPost] = useCreatePostMutation()
+  const [title, setTitle] = useState('')
+
+  const handleChangePostTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value)
+  }
+
+  const handleCreatePost = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    createPost({ variables: { title } })
+  }
+
+  return (
+    <div>
+      <h1>Next js & Graphql App</h1>
+
+      <form onSubmit={handleCreatePost}>
+        Title:
+        <input onChange={handleChangePostTitle} type="text" />
+        <button>create post</button>
+      </form>
+
       {data?.posts.map((post) => (
         <div key={post.id}>
           <h3>{post.title}</h3>

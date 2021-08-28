@@ -5,7 +5,7 @@
 ### Create nextjs app
 
 ```bash
-npx create-next-app client
+npx create-next-app client --ts
 cd client
 ```
 
@@ -25,7 +25,9 @@ yarn add -D typescript @types/react @types/node
 
 - convert js files to tsx/ts
 
-- create a `src` directory & transfer `pages`, `public` & `styles` directories to `src` directory
+### Structure nextjs app
+
+- create a `src` directory & transfer `pages` & `styles` directories to `src` directory
 
 - run: `yarn dev`
 

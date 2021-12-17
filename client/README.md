@@ -34,6 +34,24 @@ yarn add -D typescript @types/react @types/node
 
 - run: `yarn dev`
 
+### Setup module path aliases
+
+```json
+// tsconfig.json or jsconfig.json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"]
+    }
+  }
+}
+```
+
+```ts
+import ~/styles/globals.css
+```
+
 ## Setup apollo client
 
 ### Install required packages

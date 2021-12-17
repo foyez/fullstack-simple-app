@@ -16,7 +16,7 @@ yarn init
 npx tsconfig.json
 npx gitignore node
 yarn add -D typescript @types/node
-yarn add -D nodemon concurrently
+yarn add -D ts-watch
 ```
 
 ### Create `src` directory & create `index.ts` file
@@ -31,7 +31,7 @@ cd src && touch index.ts
 `server/src/index.ts`
 
 ```ts
-console.log('Hello World')
+console.log("Hello World");
 ```
 
 ### Add `scripts` in package.json file
@@ -41,10 +41,9 @@ console.log('Hello World')
 ```json
 {
   "scripts": {
-    "watch": "tsc -w",
-    "dev:nodemon": "nodemon dist/index.js",
-    "dev": "concurrently \"yarn watch\" \"yarn dev:nodemon\"",
-    "start": "node dist/index.js"
+    "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
+    "start": "node dist/index.js",
+    "build": "tsc
   }
 }
 ```
@@ -72,32 +71,32 @@ yarn add sqlite3 # for sqlite only
 sqlite
 
 ```ts
-import 'reflect-metadata'
-import { ConnectionOptions, createConnection } from 'typeorm'
+import "reflect-metadata";
+import { ConnectionOptions, createConnection } from "typeorm";
 
 const sqliteOptions: ConnectionOptions = {
-  type: 'sqlite',
+  type: "sqlite",
   database: `${rootPath}/data/fullstack.sqlite`,
   logging: !__prod__, // showing logs
   synchronize: !__prod__, // automatically create table
   entities: [],
-}
-createConnection(sqliteOptions)
+};
+createConnection(sqliteOptions);
 ```
 
 postgres
 
 ```ts
 const postgresOptions: ConnectionOptions = {
-  type: 'postgres',
-  database: 'fullstack',
-  username: 'postgres',
-  password: 'postgres',
+  type: "postgres",
+  database: "fullstack",
+  username: "postgres",
+  password: "postgres",
   logging: true, // showing logs
   synchronize: true, // automatically create table
   entities: [],
-}
-createConnection(postgresOptions)
+};
+createConnection(postgresOptions);
 ```
 
 ### Create entities
@@ -140,17 +139,17 @@ const sqliteOptions: ConnectionOptions = {
 ```ts
 const main = async () => {
   // Connect with database
-  await createConnection(sqliteOptions)
+  await createConnection(sqliteOptions);
 
   // Insert an post
-  await Post.create({ title: 'My first post' }).save()
+  await Post.create({ title: "My first post" }).save();
 
   // Read the posts
-  const posts = await Post.find()
-  console.log(posts)
-}
+  const posts = await Post.find();
+  console.log(posts);
+};
 
-main()
+main();
 ```
 
 ## Server setup
@@ -211,18 +210,18 @@ main()
 `server/src/resolvers/hello.ts`
 
 ```ts
-import { Arg, Query, Resolver } from 'type-graphql'
+import { Arg, Query, Resolver } from "type-graphql";
 
 @Resolver()
 export class HelloResolver {
   @Query(() => String)
   hello(): string {
-    return 'hello world'
+    return "hello world";
   }
 
   @Query(() => String)
-  greet(@Arg('name', () => String) name: string): string {
-    return `hi, ${name}`
+  greet(@Arg("name", () => String) name: string): string {
+    return `hi, ${name}`;
   }
 }
 ```
@@ -276,14 +275,14 @@ query {
 `server/src/resolvers/post.ts`
 
 ```ts
-import { Query, Resolver } from 'type-graphql'
-import { Post } from '../entities/Post'
+import { Query, Resolver } from "type-graphql";
+import { Post } from "../entities/Post";
 
 @Resolver()
 export class PostResolver {
   @Query(() => [Post])
   posts(): Promise<Post[]> {
-    return Post.find()
+    return Post.find();
   }
 }
 ```

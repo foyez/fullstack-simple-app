@@ -2,14 +2,17 @@
 
 ## Project setup
 
-### Create nextjs app
+### Create nextjs app <sup>[link](https://nextjs.org/docs/basic-features/typescript)</sup>
 
 ```bash
-npx create-next-app client --ts
+npx create-next-app@latest client --ts
+# or
+yarn create next-app client --typescript
+
 cd client
 ```
 
-### Convert nextjs app to typescript
+### Convert existing nextjs projects to typescript
 
 - create a `tsconfig.json` file:
 
@@ -44,39 +47,39 @@ yarn add @apollo/client graphql
 `src/utils/apolloClient.ts`
 
 ```ts
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
+import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/graphql',
-})
+  uri: "http://localhost:4000/graphql",
+});
 
 export const createApolloClient = () => {
   return new ApolloClient({
     link: httpLink,
     cache: new InMemoryCache(),
-  })
-}
+  });
+};
 ```
 
 `src/pages/_app.tsx`
 
 ```tsx
-import { AppProps } from 'next/app'
-import { ApolloProvider } from '@apollo/client'
+import { AppProps } from "next/app";
+import { ApolloProvider } from "@apollo/client";
 
-import { createApolloClient } from 'src/utils/apolloClient'
+import { createApolloClient } from "src/utils/apolloClient";
 
-const client = createApolloClient()
+const client = createApolloClient();
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <ApolloProvider client={client}>
       <Component {...pageProps} />
     </ApolloProvider>
-  )
-}
+  );
+};
 
-export default MyApp
+export default MyApp;
 ```
 
 ### Install graphql code generator
@@ -105,14 +108,14 @@ yarn add -D @graphql-codegen/cli
 
 ```yml
 overwrite: true
-schema: 'http://localhost:4000/graphql'
-documents: 'src/graphql/**/*.graphql'
+schema: "http://localhost:4000/graphql"
+documents: "src/graphql/**/*.graphql"
 generates:
   src/generated/graphql.tsx:
     plugins:
-      - 'typescript'
-      - 'typescript-operations'
-      - 'typescript-react-apollo'
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
 ```
 
 - run: `yarn install`
@@ -141,10 +144,10 @@ yarn gen
 ### Use posts query from generated code
 
 ```tsx
-import { usePostsQuery } from 'src/generated/graphql'
+import { usePostsQuery } from "src/generated/graphql";
 
 export default function Home() {
-  const { data } = usePostsQuery()
+  const { data } = usePostsQuery();
 
   return (
     <div>
@@ -155,7 +158,7 @@ export default function Home() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 ```
 
@@ -180,19 +183,19 @@ run: `yarn gen`
 
 ```tsx
 export default function Home() {
-  const { data } = usePostsQuery()
-  const [createPost] = useCreatePostMutation()
-  const [title, setTitle] = useState('')
+  const { data } = usePostsQuery();
+  const [createPost] = useCreatePostMutation();
+  const [title, setTitle] = useState("");
 
   const handleChangePostTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value)
-  }
+    setTitle(e.target.value);
+  };
 
   const handleCreatePost = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    createPost({ variables: { title } })
-  }
+    createPost({ variables: { title } });
+  };
 
   return (
     <div>
@@ -210,6 +213,6 @@ export default function Home() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 ```

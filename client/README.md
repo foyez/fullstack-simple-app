@@ -34,7 +34,7 @@ yarn add -D typescript @types/react @types/node
 
 - run: `yarn dev`
 
-### Setup module path aliases
+### Setup module path aliases <sup>[link](https://nextjs.org/docs/advanced-features/module-path-aliases)</sup>
 
 ```json
 // tsconfig.json or jsconfig.json

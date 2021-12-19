@@ -30,7 +30,7 @@ yarn add -D typescript @types/react @types/node
 
 ### Structure nextjs app
 
-- create a `src` directory & transfer `pages` & `styles` directories to `src` directory
+- create a `src` directory & transfer `pages`, `public` & `styles` directories to `src` directory
 
 - run: `yarn dev`
 
@@ -49,7 +49,7 @@ yarn add -D typescript @types/react @types/node
 ```
 
 ```ts
-import ~/styles/globals.css
+import "~/styles/globals.css";
 ```
 
 ## Setup apollo client

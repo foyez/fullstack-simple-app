@@ -185,15 +185,16 @@ yarn add -D @types/express
 
 ```ts
 const main = async () => {
-  ...
-  const app = express()
+  // ...
 
-  app.get('/test', (_req, res) => res.send('Hello World'))
+  const app = express();
 
-  app.listen(4000, () => console.log('server listening on port 4000'))
-}
+  app.get("/test", (_req, res) => res.send("Hello World"));
 
-main()
+  app.listen(4000, () => console.log("server listening on port 4000"));
+};
+
+main();
 ```
 
 ### Install graphql & apolloServer related packages
@@ -202,25 +203,38 @@ main()
 yarn add graphql apollo-server-express type-graphql
 ```
 
+### Add `skipLibCheck: true` in tsconfig.json to escape from class-validator error <sup>[help](https://typegraphql.com/docs/validation.html#caveats)</sup>
+
+`server/tsconfig.json`
+
+```json
+{
+  "compilerOptions: {
+    "skipLibCheck": true
+  }
+}
+```
+
 ### Setup apollo server
 
 `server/src/index.ts`
 
 ```ts
 const main = async () => {
-  ...
-  const app = express()
+  // ...
+
+  const app = express();
   const apolloServer = new ApolloServer({
     schema: new buildSchema({
       resolvers: [HelloResolver],
-      validate: false // stop auto validating using class-validator
-    })
-  })
-  apolloServer.applyMiddleware({ app })
-  app.listen(4000, () => console.log('server listening on port 4000'))
-}
+      validate: false, // stop auto validating using class-validator
+    }),
+  });
+  apolloServer.applyMiddleware({ app });
+  app.listen(4000, () => console.log("server listening on port 4000"));
+};
 
-main()
+main();
 ```
 
 ### Create a test resolver
@@ -264,18 +278,6 @@ const main = async () => {
 ```
 
 </details>
-
-## Add `skipLibCheck: true` in tsconfig.json to escape from class-validator error <sup>[help](https://typegraphql.com/docs/validation.html#caveats)</sup>
-
-`server/tsconfig.json`
-
-```json
-{
-  "compilerOptions: {
-    "skipLibCheck": true
-  }
-}
-```
 
 ## Test `hello` & `greet` query
 

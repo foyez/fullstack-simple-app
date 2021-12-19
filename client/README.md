@@ -1,6 +1,9 @@
 # Frontend
 
-## Project setup
+## Setup Project
+
+<details>
+<summary>View contents</summary>
 
 ### Create nextjs app <sup>[link](https://nextjs.org/docs/basic-features/typescript)</sup>
 
@@ -52,7 +55,12 @@ yarn add -D typescript @types/react @types/node
 import "~/styles/globals.css";
 ```
 
+</details>
+
 ## Setup apollo client
+
+<details>
+<summary>View contents</summary>
 
 ### Install required packages
 
@@ -100,7 +108,14 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
 export default MyApp;
 ```
 
-### Install graphql code generator
+</details>
+
+## Setup graphql code generator
+
+<details>
+<summary>View contents</summary>
+
+### Install graphql-codegen
 
 ```bash
 yarn add -D @graphql-codegen/cli
@@ -138,7 +153,14 @@ generates:
 
 - run: `yarn install`
 
-### Write graphql codes
+</details>
+
+## Graphql Query
+
+<details>
+<summary>View contents</summary>
+
+### Write graphql posts query
 
 `src/graphql/queries/posts.graphql`
 
@@ -179,6 +201,13 @@ export default function Home() {
   );
 }
 ```
+
+</details>
+
+## Graphql Mutation
+
+<details>
+<summary>View contents</summary>
 
 ### Add `createPost` mutation
 
@@ -234,3 +263,5 @@ export default function Home() {
   );
 }
 ```
+
+</details>

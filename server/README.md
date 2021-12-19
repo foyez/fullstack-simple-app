@@ -2,6 +2,9 @@
 
 ## Project setup
 
+<details>
+<summary>View contents</summary>
+
 ### Create a server directory and initialize `package.json` file
 
 ```bash
@@ -43,7 +46,7 @@ console.log("Hello World");
   "scripts": {
     "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
     "start": "node dist/index.js",
-    "build": "tsc
+    "build": "tsc"
   }
 }
 ```
@@ -54,9 +57,12 @@ console.log("Hello World");
 yarn dev
 ```
 
-Here is the results:
+</details>
 
 ## Setup Database
+
+<details>
+<summary>View contents</summary>
 
 ### Install `Typeorm`
 
@@ -99,7 +105,14 @@ const postgresOptions: ConnectionOptions = {
 createConnection(postgresOptions);
 ```
 
-### Create entities
+</details>
+
+## Create entities
+
+<details>
+<summary>View contents</summary>
+
+## Create Post entity
 
 `server/src/entities/Post.ts`
 
@@ -152,7 +165,12 @@ const main = async () => {
 main();
 ```
 
+</details>
+
 ## Server setup
+
+<details>
+<summary>View contents</summary>
 
 ### Install express
 
@@ -232,31 +250,34 @@ export class HelloResolver {
 
 ```ts
 const main = async () => {
-  ...
+  // ...
+
   const apolloServer = new ApolloServer({
     schema: new buildSchema({
       resolvers: [HelloResolver],
-      validate: false // stop auto validating using class-validator
-    })
-  })
-  ...
-}
+      validate: false, // stop auto validating using class-validator
+    }),
+  });
+
+  // ...
+};
 ```
 
-### Add `skipLibCheck: true` in tsconfig.json to escape from class-validator error <sup>[help](https://typegraphql.com/docs/validation.html#caveats)</sup>
+</details>
+
+## Add `skipLibCheck: true` in tsconfig.json to escape from class-validator error <sup>[help](https://typegraphql.com/docs/validation.html#caveats)</sup>
 
 `server/tsconfig.json`
 
 ```json
 {
   "compilerOptions: {
-    ...,
     "skipLibCheck": true
   }
 }
 ```
 
-### Test `hello` & `greet` query
+## Test `hello` & `greet` query
 
 - go to: `http://locahost:4000/graphql`
 - write this:
@@ -270,7 +291,10 @@ query {
 
 - hit: `ctrl+enter`
 
-### Connecting `type-graphql` with `typeorm`
+## Connecting `type-graphql` with `typeorm`
+
+<details>
+<summary>View contents</summary>
 
 `server/src/resolvers/post.ts`
 
@@ -320,18 +344,22 @@ export class Post extends BaseEntity {
 
 ```ts
 const main = async () => {
-  ...
+  // ...
+
   const apolloServer = new ApolloServer({
     schema: new buildSchema({
       resolvers: [HelloResolver, PostResolver],
-      validate: false // stop auto validating using class-validator
-    })
-  })
-  ...
-}
+      validate: false, // stop auto validating using class-validator
+    }),
+  });
+
+  // ...
+};
 ```
 
-### Test `posts` query
+</details>
+
+## Test `posts` query
 
 - go to: `http://locahost:4000/graphql`
 - write this:

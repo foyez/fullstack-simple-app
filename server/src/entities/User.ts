@@ -1,4 +1,4 @@
-// Libraries
+import { Field, Int, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -7,18 +7,25 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Field, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
 @Entity()
-export class Post extends BaseEntity {
+export class User extends BaseEntity {
   @Field(() => Int) // expose the field
   @PrimaryGeneratedColumn()
   id!: number; // ! means the field is required
 
   @Field(() => String)
+  @Column({ unique: true })
+  username!: string;
+
+  @Field(() => String)
+  @Column({ unique: true })
+  email!: string;
+
+  // the is not exposed
   @Column()
-  title!: string;
+  hashedPassword!: string;
 
   @Field(() => String)
   @CreateDateColumn()

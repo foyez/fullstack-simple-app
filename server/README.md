@@ -277,9 +277,7 @@ const main = async () => {
 };
 ```
 
-</details>
-
-## Test `hello` & `greet` query
+### Test `hello` & `greet` query
 
 - go to: `http://locahost:4000/graphql`
 - write this:
@@ -293,25 +291,14 @@ query {
 
 - hit: `ctrl+enter`
 
+</details>
+
 ## Connecting `type-graphql` with `typeorm`
 
 <details>
 <summary>View contents</summary>
 
-`server/src/resolvers/post.ts`
-
-```ts
-import { Query, Resolver } from "type-graphql";
-import { Post } from "../entities/Post";
-
-@Resolver()
-export class PostResolver {
-  @Query(() => [Post])
-  posts(): Promise<Post[]> {
-    return Post.find();
-  }
-}
-```
+### Add `Post` entity
 
 `server/src/entities/Post.ts`
 
@@ -340,7 +327,40 @@ export class Post extends BaseEntity {
 }
 ```
 
-### Add `PostResolver` in apollo server
+`server/src/index.ts`
+
+```ts
+const main = async () => {
+  // ...
+
+  const sqliteOptions: ConnectionOptions = {
+    type: "sqlite",
+    database: `${rootPath}/data/fullstack.sqlite`,
+    logging: !__prod__,
+    synchronize: !__prod__, // automatically create table
+    entities: [Post],
+  };
+
+  // ...
+};
+```
+
+### Add `post` resolver
+
+`server/src/resolvers/post.ts`
+
+```ts
+import { Query, Resolver } from "type-graphql";
+import { Post } from "../entities/Post";
+
+@Resolver()
+export class PostResolver {
+  @Query(() => [Post])
+  posts(): Promise<Post[]> {
+    return Post.find();
+  }
+}
+```
 
 `server/src/index.ts`
 
@@ -359,9 +379,7 @@ const main = async () => {
 };
 ```
 
-</details>
-
-## Test `posts` query
+### Test `posts` query
 
 - go to: `http://locahost:4000/graphql`
 - write this:
@@ -378,3 +396,158 @@ query {
 ```
 
 - hit: `ctrl+enter`
+
+</details>
+
+## Authentication
+
+<details>
+<summary>View contents</summary>
+
+### Add `User` entity
+
+`src/entities/User.ts`
+
+```ts
+import { Field, Int, ObjectType } from "type-graphql";
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
+
+@ObjectType()
+@Entity()
+export class User extends BaseEntity {
+  @Field(() => Int) // expose the field
+  @PrimaryGeneratedColumn()
+  id!: number; // ! means the field is required
+
+  @Field(() => String)
+  @Column({ unique: true })
+  username!: string;
+
+  @Field(() => String)
+  @Column({ unique: true })
+  email!: string;
+
+  // the is not exposed
+  @Column()
+  hashedPassword!: string;
+
+  @Field(() => String)
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Field(() => String)
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
+```
+
+`src/index.ts`
+
+```ts
+const main = async () => {
+  // ...
+
+  const sqliteOptions: ConnectionOptions = {
+    type: "sqlite",
+    database: `${rootPath}/data/fullstack.sqlite`,
+    logging: !__prod__,
+    synchronize: !__prod__, // automatically create table
+    entities: [Post, User],
+  };
+
+  // ...
+};
+```
+
+### Add `user` resolver
+
+`src/resolvers/user.ts`
+
+```ts
+import { Arg, Field, Mutation, ObjectType, Resolver } from "type-graphql";
+
+import { User } from "../entities";
+import { UserRegisterInput } from "./types/user-input";
+import { hashPassword } from "../utils/libraries";
+import { validateRegister } from "../utils/validations";
+
+@ObjectType()
+class FieldError {
+  @Field()
+  field: string;
+
+  @Field()
+  message: string;
+}
+
+@ObjectType()
+class UserResponse {
+  @Field(() => User, { nullable: true })
+  user?: User;
+
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
+}
+
+@Resolver(User)
+export class UserResolver {
+  @Mutation(() => UserResponse)
+  async register(
+    @Arg("credentials", () => UserRegisterInput) credentials: UserRegisterInput
+  ): Promise<UserResponse> {
+    const { username, email, password } = credentials;
+
+    const errors = validateRegister(credentials);
+    if (errors) {
+      return { errors };
+    }
+
+    const hashedPassword = await hashPassword(password);
+    const user = User.create({ username, email, hashedPassword });
+
+    try {
+      await user.save();
+    } catch (err) {}
+
+    return { user };
+  }
+}
+```
+
+### Test `register` mutation
+
+- go to: `http://locahost:4000/graphql`
+- write this:
+
+```graphql
+mutation {
+  register(
+    credentials: {
+      username: "test"
+      email: "test@email.com"
+      password: "testpass"
+    }
+  ) {
+    user {
+      id
+      email
+      username
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+```
+
+- hit: `ctrl+enter`
+
+</details>

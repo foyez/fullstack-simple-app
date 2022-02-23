@@ -151,13 +151,34 @@ const sqliteOptions: ConnectionOptions = {
 
 ```ts
 const main = async () => {
-  // Connect with database
+  // Database setup
   await createConnection(sqliteOptions);
 
-  // Insert an post
-  await Post.create({ title: "My first post" }).save();
+  // Insert Posts
+  await Post.create({title: 'My First Post'}).save()
+  await Post.create({title: 'My First Post 2'}).save()
+  await Post.create({ title: "My First Post 3" }).save();
 
-  // Read the posts
+  // Read post by id
+  const id = 1;
+  const postById = await Post.findOne(id);
+  console.log(postById);
+
+  // Read post by options
+  const title = "My First Post 2";
+  const postByTitle = await Post.findOne({ title });
+  console.log(postByTitle);
+
+  // Update an post
+  const idToUpdate = 2;
+  const updatedTitle = "My First Post 2 updated";
+  await Post.update(idToUpdate, { title: updatedTitle });
+
+  // Delete an post
+  const idToDelete = 3;
+  await Post.delete(idToDelete);
+
+  // Read posts
   const posts = await Post.find();
   console.log(posts);
 };

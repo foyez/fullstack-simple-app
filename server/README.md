@@ -19,7 +19,7 @@ yarn init
 npx tsconfig.json
 npx gitignore node
 yarn add -D typescript @types/node
-yarn add -D ts-watch
+yarn add -D tsc-watch
 ```
 
 ### Create `src` directory & create `index.ts` file
